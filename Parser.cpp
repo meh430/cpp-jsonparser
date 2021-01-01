@@ -17,7 +17,9 @@ std::vector<std::string> Parser::tokenizeArray(std::string jsonArrayStr) {
         return arrayTokens;
     }
 
+
+    // split by ,. Stop on every { and [ and \"
     for (int i = 0; i < arrayContents.size(); i++) {
-        
+
     }
 }
