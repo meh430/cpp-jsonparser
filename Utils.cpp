@@ -1,29 +1,29 @@
 #include "Utils.h"
 
-bool Utils::toBool(std::string str) {
-    return (str == "true");
+std::string Utils::readFromFile(const std::string &filename) {
+    std::ifstream in(filename.c_str());
+    std::string str = "";
+    std::string tmp;
+    while (getline(in, tmp)) str += tmp;
+    in.close();
+    return str;
 }
 
-template <class T>
-T Utils::checkIfNull(std::string str) {
-    if(str == "null") {
-        return nullptr;
-    }
-}
-
-std::string Utils::trimString(std::string str) {
+std::string Utils::trimString(const std::string &str, bool newLine) {
     int start = 0;
     int end = str.size() - 1;
 
+    const char trimChar = newLine ? '\n' : ' ';
+
     for (int i = 0; i < str.size(); i++) {
-        if(str[i] != ' ') {
+        if(!isspace(str[i])) {
             start = i;
             break;
         }
     }
 
     for (int i = str.size() - 1; i >= 0; i--) {
-        if(str[i] != ' ') {
+        if(!isspace(str[i])) {
             end = i;
             break;
         }
@@ -32,6 +32,69 @@ std::string Utils::trimString(std::string str) {
     if(start > end) {
         return "";
     } else {
-        return str.substr(start, end + 1);
+        return str.substr(start, (end+1) - start);
     }
+}
+
+StringAndIndex Utils::getStringEndIndex(const std::string &str, int startIndex) {
+    std::string returnString = "";
+    int endIndex = startIndex;
+    for (int i = startIndex+1; i < str.size(); i++) {
+        if(str[i] == '\"' && str[i-1] != '\\') {
+            endIndex = i;
+            break;
+        } else {
+            returnString += str[i];
+        }
+    }
+
+    StringAndIndex si{endIndex, returnString};
+    return si;
+}
+
+StringAndIndex Utils::getJsonItemEndIndex(const std::string &str, int startIndex, char opening, char closing) {
+    std::string returnString = "";
+    int endIndex = startIndex;
+    std::stack<char> openings;
+    returnString += opening;
+    openings.push(opening);
+
+    for (int i = startIndex+1; i < str.size(); i++) {
+        bool lastIndex = i == (str.size() - 1);
+        if(str[i] == opening) {
+            openings.push(opening);
+            returnString += str[i];
+        } else if(str[i] == closing) {
+            openings.pop();
+            returnString += str[i];
+            if(openings.empty()) {
+                endIndex = i;
+                break;
+            }
+        } else {
+            returnString += str[i];
+        }
+    }
+
+    StringAndIndex si{endIndex, returnString};
+    return si;
+}
+
+void Utils::printVector(const std::vector<std::string> &vec) {
+    for(const std::string &val : vec) {
+        std::cout << val << "!*!";
+    }
+    std::cout << "\n";
+}
+
+StringAndIndex Utils::getJsonObjectEndIndex(const std::string &str, int startIndex) {
+    return getJsonItemEndIndex(str, startIndex, tokens::openingCurly, tokens::closingCurly);
+}
+
+StringAndIndex Utils::getJsonArrayEndIndex(const std::string &str, int startIndex) {
+    return getJsonItemEndIndex(str, startIndex, tokens::openingSquare, tokens::closingSquare);
+}
+
+bool Utils::toBool(const std::string &str) {
+    return (str == "true");
 }

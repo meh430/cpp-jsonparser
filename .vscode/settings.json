@@ -35,6 +35,13 @@
         "xmemory0": "cpp",
         "xstddef": "cpp",
         "xtr1common": "cpp",
-        "xutility": "cpp"
+        "xutility": "cpp",
+        "deque": "cpp",
+        "stack": "cpp",
+        "map": "cpp",
+        "xtree": "cpp",
+        "fstream": "cpp",
+        "sstream": "cpp",
+        "string": "cpp"
     }
 }
