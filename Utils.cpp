@@ -1,20 +1,18 @@
 #include "Utils.h"
 
 std::string Utils::readFromFile(const std::string &filename) {
-    std::ifstream in(filename.c_str());
-    std::string str = "";
-    std::string tmp;
-    while (getline(in, tmp)) str += tmp;
-    in.close();
-    return str;
+    std::ifstream fileReader(filename.c_str());
+    std::string fileText = "";
+    std::string currLine;
+    while (getline(fileReader, currLine)) fileText += currLine;
+    fileReader.close();
+    return fileText;
 }
 
-std::string Utils::trimString(const std::string &str, bool newLine) {
+std::string Utils::trimString(const std::string &str) {
     int start = 0;
     int end = str.size() - 1;
-
-    const char trimChar = newLine ? '\n' : ' ';
-
+    
     for (int i = 0; i < str.size(); i++) {
         if(!isspace(str[i])) {
             start = i;

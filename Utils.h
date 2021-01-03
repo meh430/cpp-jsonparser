@@ -29,7 +29,7 @@ class Utils {
     public:
         bool toBool(const std::string &str);
 
-        std::string trimString(const std::string &str, bool newLine = false);
+        std::string trimString(const std::string &str);
 
         //requires: str[startIndex] == '{'
         StringAndIndex getJsonObjectEndIndex(const std::string &str, int startIndex);
